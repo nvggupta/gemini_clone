@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gemini</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside id="aside">
+      <div class="menu-bar">
+        <div class="menu"></div>
+        <div class="menu"></div>
+        <div class="menu"></div>
+      </div>
+      <footer>
+        <div class="side-bar newChat">
+          <p>&#10789;</p>
+          <span>New Chat</span>
+        </div>
+        <div class="history"></div>
+
+        <div class="side-bar help">
+          <h2>&forall;</h2>
+          <span>Help</span>
+        </div>
+        <div class="side-bar activity">
+          <h2>&exist;</h2>
+          <span>activity</span>
+        </div>
+        <div class="side-bar setting">
+          <h2>&exist;</h2>
+          <span>Setting</span>
+        </div>
+      </footer>
+    </aside>
+    <main>
+      <nav id="nav">
+        <select name="Gemini" id="select">
+          <option value="" id="option1">
+            <img src="./images/gemini_favicon.png" alt="" />
+            <span>Gemini</span>
+            <img src="./images/download (1).jpg" alt="" />
+          </option>
+          <option value="" id="option-2">
+            <img src="./images/gemini_favicon.png" alt="" />
+            <span>Advanced Gemini</span>
+            <div class="upgrade">Upgrade</div>
+          </option>
+        </select>
+        <div id="sign-up">
+          <img id="admin-Img" src="./images/download.jpg" alt="" />
+        </div>
+      </nav>
+      <section id="section1">
+        <div class="dummy-text">
+          <h1>Hello, Nikhil</h1>
+          <h3>How can I help you today?</h3>
+        </div>
+        <div class="dummy-cards">
+          <div class="cards">Help me find the latest trends</div>
+          <div class="cards">
+            Help me write a refund email for a product that's damaged
+          </div>
+          <div class="cards">Come up with a product name for a new app</div>
+          <div class="cards">Brainstorm a tagline for my online store</div>
+        </div>
+      </section>
+      <div class="result">
+      </div>
+
+      <footer>
+        <div class="search">
+          <input type="text" placeholder="Enter A prompt Here" id="input" />
+          <span id="search">Search</span>
+        </div>
+        <div class="terms">
+          Gemini may display inaccurate info, including about people, so
+          double-check its responses. Your privacy & Gemini Apps
+        </div>
+      </footer>
+    </main>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      const API_KEY = "AIzaSyAZeV-QyHaxUWqEHmSvuS7YZ6SHf3j61l4";
+      const genAI = new GoogleGenerativeAI(API_KEY);
+      const search = document.getElementById("search");
+      const input = document.getElementById("input");
+      const section1 = document.getElementById("section1");
+      const result = document.querySelector(".result");
+
+      async function run() {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const prompt = input.value;
+        console.log(prompt);
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = await response.text();
+        console.log(text);
+        section1.style.display = "none";
+        const span = document.createElement("span");
+        span.classList.add("question");
+        span.innerText = prompt;
+        const para = document.createElement("p");
+        para.classList.add("answer");
+        para.innerText = text;
+        result.innerHTML = span;
+        result.innerHTML = para;
+      }
+      search.addEventListener("click", () => {
+        run();
+      });
+    </script>
+    <!-- <script src="script.js"></script> -->
+  </body>
+</html>
