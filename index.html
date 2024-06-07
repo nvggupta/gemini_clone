@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gemini</title>
     <link rel="stylesheet" href="styles.css" />
+
   </head>
   <body>
     <aside id="aside">
@@ -67,6 +68,7 @@
         </div>
       </section>
       <div class="result">
+        <span class="question">what is css</span>
       </div>
 
       <footer>
@@ -87,37 +89,44 @@
         }
       }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module">
-      import { GoogleGenerativeAI } from "@google/generative-ai";
-      const API_KEY = "AIzaSyAZeV-QyHaxUWqEHmSvuS7YZ6SHf3j61l4";
-      const genAI = new GoogleGenerativeAI(API_KEY);
-      const search = document.getElementById("search");
-      const input = document.getElementById("input");
-      const section1 = document.getElementById("section1");
-      const result = document.querySelector(".result");
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        const API_KEY = "AIzaSyAZeV-QyHaxUWqEHmSvuS7YZ6SHf3j61l4";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const search = document.getElementById("search");
+        const input = document.getElementById("input");
+        const section1 = document.getElementById("section1");
+        const result = document.querySelector(".result");
+        
+        async function run() {
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+          const prompt = input.value;
+          console.log(prompt);
+          const resultContent = await model.generateContent(prompt);
+          const response = await resultContent.response;
+          const markdownText = await response.text();
+          const text = marked.parse(markdownText);
+          
+          
+          section1.style.display = "none";
+          result.style.display = "block"
+          const span = document.createElement("span");
+          span.classList.add("question");
 
-      async function run() {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const prompt = input.value;
-        console.log(prompt);
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = await response.text();
-        console.log(text);
-        section1.style.display = "none";
-        const span = document.createElement("span");
-        span.classList.add("question");
-        span.innerText = prompt;
-        const para = document.createElement("p");
-        para.classList.add("answer");
-        para.innerText = text;
-        result.innerHTML = span;
-        result.innerHTML = para;
-      }
-      search.addEventListener("click", () => {
-        run();
-      });
-    </script>
-    <!-- <script src="script.js"></script> -->
+          span.innerText = prompt;
+          const para = document.createElement("p");
+          para.classList.add("answer");
+          para.innerHTML = text;
+          result.appendChild(para)
+        //   result.innerHTML = span;
+        //   result.innerHTML =  para;
+        }
+  
+        search.addEventListener("click", () => {
+          run();
+        });
+      </script>
+    
   </body>
 </html>
